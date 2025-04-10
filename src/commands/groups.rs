@@ -139,7 +139,7 @@ pub(crate) async fn groups_remove(
 		// Ignore the error if the role is already deleted
 		Err(serenity::Error::Http(_)) => {}
 		Err(error) => return Err(error.into()),
-	};
+	}
 
 	diesel::delete(Group::with_id(id))
 		.execute(&mut ctx.data.database.get().await?)

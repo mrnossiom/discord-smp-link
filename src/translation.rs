@@ -119,7 +119,7 @@ impl Translations {
 	pub(crate) fn apply_translations_to_interactions(
 		&self,
 		commands: &mut [Command],
-		parent_name: &Option<String>,
+		parent_name: Option<&String>,
 	) {
 		for command in &mut *commands {
 			// Skip prefix commands
@@ -127,7 +127,7 @@ impl Translations {
 				continue;
 			}
 
-			self.apply_translations_to_interaction(command, parent_name.clone());
+			self.apply_translations_to_interaction(command, parent_name.cloned());
 		}
 	}
 
@@ -182,7 +182,7 @@ impl Translations {
 			);
 		}
 
-		self.apply_translations_to_interactions(&mut command.subcommands, &Some(full_command_name));
+		self.apply_translations_to_interactions(&mut command.subcommands, Some(&full_command_name));
 	}
 
 	/// Apply translations to the given slash command

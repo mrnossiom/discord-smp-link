@@ -52,7 +52,7 @@ fn build_framework(data: ArcData) -> Framework {
 				];
 
 				data.translations
-					.apply_translations_to_interactions(&mut commands, &None);
+					.apply_translations_to_interactions(&mut commands, None);
 
 				commands
 			},

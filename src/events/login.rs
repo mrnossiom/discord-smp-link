@@ -47,7 +47,7 @@ pub(crate) async fn login(ctx: MessageComponentContext<'_>) -> InteractionResult
 			.await?;
 
 		return Ok(());
-	};
+	}
 
 	let (verified_role, levels, email_pattern) =
 		match check_login_components(&mut connection, member.guild_id).await {
@@ -114,7 +114,7 @@ pub(crate) async fn login(ctx: MessageComponentContext<'_>) -> InteractionResult
 	let mail_domain = user_data
 		.mail
 		.split('@')
-		.last()
+		.next_back()
 		.context("email returned by google is invalid")?;
 	if mail_domain != email_pattern {
 		ctx.shout(ctx.translate("event-login-email-domain-not-allowed", None))

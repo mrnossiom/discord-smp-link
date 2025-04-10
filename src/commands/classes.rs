@@ -155,7 +155,7 @@ pub(crate) async fn classes_remove(
 		// Ignore the error if the role is already deleted
 		Err(serenity::Error::Http(_)) => {}
 		Err(error) => return Err(error.into()),
-	};
+	}
 
 	diesel::delete(Class::with_id(id))
 		.execute(&mut connection)

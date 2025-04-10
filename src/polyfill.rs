@@ -172,7 +172,7 @@ impl MessageComponentReplyHandle<'_> {
 	}
 
 	/// Edits the message that this [`Self`] points to
-	pub(crate) async fn edit<'att>(&self, reply: CreateReply) -> Result<(), serenity::Error> {
+	pub(crate) async fn edit(&self, reply: CreateReply) -> Result<(), serenity::Error> {
 		if let Some(followup) = &self.followup {
 			self.interaction
 				.edit_followup(

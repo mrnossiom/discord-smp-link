@@ -125,7 +125,7 @@ pub(crate) fn command_on_error(error: FrameworkError) -> BoxFuture<()> {
 
 		if let Err(error) = error {
 			tracing::error!(error = ?error);
-		};
+		}
 	})
 }
 

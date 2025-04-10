@@ -121,7 +121,7 @@ pub(crate) async fn levels_remove(
 		// Ignore the error if the role is already deleted
 		Err(serenity::Error::Http(_)) => {}
 		Err(error) => return Err(error.into()),
-	};
+	}
 
 	diesel::delete(Level::with_id(id))
 		.execute(&mut ctx.data.database.get().await?)

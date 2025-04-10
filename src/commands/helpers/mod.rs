@@ -28,8 +28,8 @@ pub(crate) async fn debug(_: ApplicationContext<'_>) -> InteractionResult {
 }
 
 /// Register all development slash commands
-pub(crate) async fn _register<'a>(
-	http: &'a Http,
+pub(crate) async fn register_(
+	http: &Http,
 	guild_id: &GuildId,
 	commands: &Vec<Command>,
 ) -> Result<(), serenity::Error> {

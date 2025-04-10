@@ -102,7 +102,7 @@ pub(super) async fn debug_refresh_members(ctx: ApplicationContext<'_>) -> Intera
 
 			match new_member.insert().execute(&mut connection).await {
 				Ok(_) => count += 1,
-				Err(DieselError::DatabaseError(DatabaseErrorKind::UniqueViolation, _)) => continue,
+				Err(DieselError::DatabaseError(DatabaseErrorKind::UniqueViolation, _)) => {}
 				Err(error) => return Err(error.into()),
 			};
 		}
