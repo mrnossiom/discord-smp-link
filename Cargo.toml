@@ -20,21 +20,21 @@ dotenvy = "0.15"
 fluent = "0.16"
 fluent-syntax = "0.11"
 futures = "0.3"
-hyper = { version = "0.14", features = ["full"] }
-hyper-rustls = { version = "0.24", features = ["rustls-native-certs"] }
+hyper = { version = "1", features = ["full"] }
+hyper-rustls = { version = "0.27", features = ["rustls-native-certs"] }
 intl-memoizer = "0.5"
-oauth2 = "4"
+oauth2 = "5"
 poise = "0.6"
 rocket = { version = "0.5", features = ["tls"] }
 rocket_dyn_templates = { version = "0.2", features = ["tera"] }
-rustls = "0.21"
-rustls-pemfile = "1"
-thiserror = "1"
-secrecy = "0.8"
+rustls = "0.23"
+rustls-pemfile = "2"
+thiserror = "2"
+secrecy = "0.10"
 serde = "1"
 serde_json = "1"
 tokio = { version = "1", features = ["full", "tracing"] }
-tokio-rustls = "0.24"
+tokio-rustls = "0.26"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = [
 	"registry",
@@ -52,7 +52,7 @@ default-features = false
 features = ["mysql"]
 
 [dependencies.reqwest]
-version = "0.11"
+version = "0.12"
 default-features = false
 features = ["rustls-tls-native-roots"]
 

@@ -6,14 +6,13 @@ use crate::{
 };
 use anyhow::Context as _;
 use futures::Future;
-use hyper::StatusCode;
 use oauth2::{
 	basic::{BasicClient, BasicTokenType},
 	url::Url,
-	AuthUrl, CsrfToken, EmptyExtraTokenFields, RedirectUrl, RevocationUrl, Scope,
-	StandardTokenResponse, TokenResponse, TokenUrl,
+	AuthUrl, CsrfToken, EmptyExtraTokenFields, EndpointNotSet, EndpointSet, RedirectUrl,
+	RevocationUrl, Scope, StandardTokenResponse, TokenResponse, TokenUrl,
 };
-use reqwest::Client;
+use reqwest::{Client, StatusCode};
 use serde_json::Value;
 use std::{
 	collections::HashMap,
@@ -55,7 +54,8 @@ pub(crate) struct PendingAuthRequest {
 #[derive(Debug)]
 pub(crate) struct GoogleAuthentification {
 	/// The inner client used to manage the flow
-	pub(crate) client: BasicClient,
+	pub(crate) client:
+		BasicClient<EndpointSet, EndpointNotSet, EndpointNotSet, EndpointSet, EndpointSet>,
 	// TODO: change string to `CsrfToken` if oauth2-rs implement Eq + Hash on it
 	/// A queue to wait for the user to finish the flow
 	pub(crate) pending: Arc<RwLock<HashMap<String, PendingAuthRequest>>>,
@@ -73,10 +73,12 @@ impl GoogleAuthentification {
 		let revocation_url = RevocationUrl::new(urls::GOOGLE_REVOKE_ENDPOINT.into())?;
 
 		let (client_id, client_secret) = config.google_client.clone();
-		let oauth_client =
-			BasicClient::new(client_id, Some(client_secret), auth_url, Some(token_url))
-				.set_redirect_uri(redirect_url)
-				.set_revocation_uri(revocation_url);
+		let oauth_client = BasicClient::new(client_id)
+			.set_client_secret(client_secret)
+			.set_auth_uri(auth_url)
+			.set_token_uri(token_url)
+			.set_redirect_uri(redirect_url)
+			.set_revocation_url(revocation_url);
 
 		Ok(Self {
 			client: oauth_client,
@@ -139,10 +141,11 @@ impl GoogleAuthentification {
 			.build()
 			.context("could not build request")?;
 
-		let response = match self.http.execute(request).await {
-			Ok(response) => response,
-			Err(error) => return Err(GoogleAuthentificationError::Fetch(error)),
-		};
+		let response = self
+			.http
+			.execute(request)
+			.await
+			.map_err(GoogleAuthentificationError::Fetch)?;
 
 		if response.status() != StatusCode::OK {
 			return Err(GoogleAuthentificationError::NonOkResponse);

@@ -3,7 +3,7 @@
 use super::{AcceptLanguage, ServerError};
 use crate::{auth::PendingAuthRequest, states::ArcData};
 use anyhow::{anyhow, Context};
-use oauth2::{reqwest::async_http_client, AuthorizationCode};
+use oauth2::AuthorizationCode;
 use rocket::{response::Redirect, FromForm, Request, State};
 use rocket_dyn_templates::{context, Template};
 
@@ -38,11 +38,17 @@ pub(super) async fn handle_oauth2(
 		))?
 	};
 
+	let http_client = reqwest::ClientBuilder::new()
+		// Following redirects opens the client up to SSRF vulnerabilities.
+		.redirect(reqwest::redirect::Policy::none())
+		.build()
+		.context("could not build http client")?;
+
 	let token_response = data
 		.auth
 		.client
 		.exchange_code(AuthorizationCode::new(params.code))
-		.request_async(async_http_client)
+		.request_async(&http_client)
 		.await
 		.context("could not get oauth2 token")?;
 

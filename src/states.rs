@@ -18,7 +18,7 @@ use poise::{
 	serenity_prelude::{self as serenity, GuildId},
 	CreateReply, ReplyHandle,
 };
-use secrecy::{ExposeSecret, Secret};
+use secrecy::{ExposeSecret, SecretString};
 use std::{
 	env::{self, VarError},
 	fmt,
@@ -30,11 +30,11 @@ use unic_langid::LanguageIdentifier;
 #[derive(Debug)]
 pub(crate) struct Config {
 	/// The token needed to access the `Discord` Api
-	pub(crate) discord_token: Secret<String>,
+	pub(crate) discord_token: SecretString,
 	/// The guild on witch you can access development commands
 	pub(crate) discord_development_guild: GuildId,
 	/// The `Postgres` connection uri
-	pub(crate) database_url: Secret<String>,
+	pub(crate) database_url: SecretString,
 	/// The `Google` auth client id and secret pair
 	pub(crate) google_client: (ClientId, ClientSecret),
 	/// The `Discord` invite link to rejoin the support server
@@ -88,9 +88,9 @@ impl Config {
 			})?;
 
 		Ok(Self {
-			discord_token: Secret::new(required_env_var("DISCORD_TOKEN")?),
+			discord_token: SecretString::from(required_env_var("DISCORD_TOKEN")?),
 			discord_development_guild: GuildId::new(discord_development_guild),
-			database_url: Secret::new(required_env_var("DATABASE_URL")?),
+			database_url: SecretString::from(required_env_var("DATABASE_URL")?),
 			google_client: (
 				ClientId::new(required_env_var("GOOGLE_CLIENT_ID")?),
 				ClientSecret::new(required_env_var("GOOGLE_CLIENT_SECRET")?),
